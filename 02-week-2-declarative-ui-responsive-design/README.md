@@ -1,4 +1,19 @@
-#  AI Prompt Challenge 
+##   Hasil Screenshot & Tampilan Aplikasi (Layout sederhana)
+Berikut adalah hasil tampilan implementasi kode pada praktikum 4 ini:
+![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\1.png)
+
+##   Hasil Screenshot & Tampilan Aplikasi (Dashboard responsif)
+Berikut adalah hasil tampilan implementasi kode pada praktikum 5 ini:
+![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\2.png)
+![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\3.png)
+
+##   Hasil Screenshot & Tampilan Aplikasi (Tugas utama)
+Berikut adalah hasil tampilan implementasi kode pada praktikum 5 ini:
+![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\4.png)
+![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\5.png)
+![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\6.png)
+
+#  AI Prompt Challenge AI
 
 ### 1.  Prompt Desain: GridView vs LayoutBuilder + Column
 * **Perbandingan Pendekatan:**
@@ -46,7 +61,7 @@
 
 ---
 
-### 3. 🔍 Verification Prompt: Responsivitas & Stabilitas
+### 3.  Verification Prompt:
 * **Pengujian Layar < 600px:** 
    Layout kartu tugas menggunakan breakpoint (`kWideBreakpoint = 700`), sehingga pada layar di bawah 600px akan otomatis menyesuaikan ke jalur 1-kolom.
 * **Pencegahan Overflow:**
