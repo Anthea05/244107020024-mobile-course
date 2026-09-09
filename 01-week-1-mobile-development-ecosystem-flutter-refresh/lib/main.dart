@@ -12,10 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Profil Mahasiswa',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primarySwatch: Colors.indigo, useMaterial3: true),
       home: const ProfilPage(),
     );
   }
@@ -27,10 +24,7 @@ class ProfilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profil Mahasiswa'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Profil Mahasiswa'), centerTitle: true),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -44,12 +38,12 @@ class ProfilPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Nama Kamu', // ganti dengan nama asli kamu
+                'ANTHEA AMODIA',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               const Text(
-                'NIM: 244107020024', // ganti dengan NIM kamu
+                'NIM: 244107020024',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               const SizedBox(height: 4),
@@ -60,7 +54,7 @@ class ProfilPage extends StatelessWidget {
               const SizedBox(height: 20),
               const Divider(),
               const SizedBox(height: 10),
-              
+
               const ListTile(
                 leading: Icon(Icons.email, color: Colors.indigo),
                 title: Text('Email'),
