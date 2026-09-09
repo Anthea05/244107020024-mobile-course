@@ -1,20 +1,5 @@
 #  AI Prompt Challenge 
 
-Repositori ini berisi dokumentasi pengerjaan tantangan *AI Prompt Challenge* yang mencakup analisis desain layout dashboard akademik, studi kasus penguatan konsep layout Flutter (`Expanded` vs `Flexible`), serta verifikasi responsivitas kode.
-
----
-
-##  Stack Teknologi
-
-* **Bahasa:** Dart (null safety penuh)
-* **Framework:** Flutter SDK (stable channel)
-* **Tools:** Android Studio, VS Code, Git, Flutter CLI
-* **Testing:** `flutter_test` (widget & layout tests)
-
----
-
-##  Daftar Isi & Ringkasan Materi
-
 ### 1.  Prompt Desain: GridView vs LayoutBuilder + Column
 * **Perbandingan Pendekatan:**
   * **GridView:** Lebih sederhana dan otomatis mengatur item ke baris berikutnya berdasarkan `crossAxisCount`. Sangat cocok untuk dashboard dengan banyak card seragam. *Catatan:* Perlu memperhatikan `childAspectRatio` agar card tidak terpotong.
