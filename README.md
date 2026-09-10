@@ -2,7 +2,7 @@
 
 # Pemrograman Mobile — Portfolio & Learning Path
 
-*Repository resmi untuk seluruh modul praktikum, tugas, dan proyek mata kuliah Pemrograman Mobile Semester 5.*
+*Repository untuk seluruh modul praktikum, tugas, dan proyek mata kuliah Pemrograman Mobile Semester 5.*
 
 [![Flutter Status](https://img.shields.io/badge/Framework-Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart Status](https://img.shields.io/badge/Language-Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
