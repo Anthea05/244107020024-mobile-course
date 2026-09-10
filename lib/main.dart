@@ -46,8 +46,6 @@ class AcademicOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Academic Overview"),
@@ -152,40 +150,33 @@ class _InfoCardGrid extends StatelessWidget {
 
   final bool isWide;
 
+  static const _cards = [
+    InfoCard(title: "Assignments", value: "8"),
+    InfoCard(title: "Attendance", value: "92%"),
+    InfoCard(title: "Portfolio", value: "Ready"),
+    InfoCard(title: "Current Week", value: "02"),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    const cards = [
-      _CardData(title: "Assignments", value: "8"),
-      _CardData(title: "Attendance", value: "92%"),
-      _CardData(title: "Portfolio", value: "Ready"),
-      _CardData(title: "Current Week", value: "02"),
-    ];
-
     if (!isWide) {
-      // Layar sempit: 1 kolom
       return Column(
         children: [
-          for (final card in cards) ...[
-            _InfoCardTile(data: card),
-            const SizedBox(height: 12),
-          ],
+          for (final card in _cards) ...[card, const SizedBox(height: 12)],
         ],
       );
     }
 
-    // Layar lebar: 2 kolom, dipasangkan per Row
     final rows = <Widget>[];
-    for (var i = 0; i < cards.length; i += 2) {
-      final hasSecond = i + 1 < cards.length;
+    for (var i = 0; i < _cards.length; i += 2) {
+      final hasSecond = i + 1 < _cards.length;
       rows.add(
         Row(
           children: [
-            Expanded(child: _InfoCardTile(data: cards[i])),
+            Expanded(child: _cards[i]),
             const SizedBox(width: 12),
             Expanded(
-              child: hasSecond
-                  ? _InfoCardTile(data: cards[i + 1])
-                  : const SizedBox.shrink(),
+              child: hasSecond ? _cards[i + 1] : const SizedBox.shrink(),
             ),
           ],
         ),
@@ -196,42 +187,37 @@ class _InfoCardGrid extends StatelessWidget {
   }
 }
 
-class _CardData {
-  const _CardData({required this.title, required this.value});
+/// Kartu informasi reusable — dipakai berulang di [_InfoCardGrid]
+/// dan dites langsung lewat `find.byType(Card)` di widget test.
+class InfoCard extends StatelessWidget {
+  const InfoCard({required this.title, required this.value, super.key});
+
   final String title;
   final String value;
-}
-
-class _InfoCardTile extends StatelessWidget {
-  const _InfoCardTile({required this.data});
-  final _CardData data;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Semantics(
-      label: "${data.title}: ${data.value}",
-      child: Container(
-        height: 100,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(data.title, style: theme.textTheme.titleMedium),
-            ),
-            Text(
-              data.value,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.bold,
+      label: "$title: $value",
+      child: Card(
+        color: theme.colorScheme.surfaceContainerHighest,
+        child: Container(
+          height: 100,
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(child: Text(title, style: theme.textTheme.titleMedium)),
+              Text(
+                value,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
