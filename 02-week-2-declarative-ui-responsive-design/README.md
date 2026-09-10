@@ -1,4 +1,4 @@
-## 📸 Hasil Screenshot & Tampilan Aplikasi
+## Hasil Screenshot & Tampilan Aplikasi
 
 ### 1. Layout Sederhana (Praktikum 4)
 Berikut adalah hasil tampilan implementasi kode pada Praktikum 4:
@@ -25,10 +25,7 @@ Berikut adalah hasil pengujian dan tampilan dari tugas utama:
 | :---: | :---: | :---: |
 | ![Tugas 1](screenshots/4.png) | ![Tugas 2](screenshots/5.png) | ![Tugas 3](screenshots/6.png) |
 
-### 3. Tugas Testing dasar
-Berikut adalah hasil pengujian dan tampilan dari tugas utama:
-| :---: |
-| ![Dashboard Desktop](screenshots/6.png) |
+
 #  AI Prompt Challenge AI
 
 ### 1.  Prompt Desain: GridView vs LayoutBuilder + Column
@@ -86,7 +83,7 @@ Berikut adalah hasil pengujian dan tampilan dari tugas utama:
   Seluruh widget dan properti yang digunakan dipastikan tersedia pada versi stable, meliputi: `LayoutBuilder`, `Row`, `Column`, `Expanded`, `Container`, `CupertinoSwitch`, dan `Semantics`.
 
 ---
-## 📝 Catatan Refleksi & Pengalaman Praktikum
+## Catatan Refleksi & Pengalaman Praktikum
 
 ### 1. Perbedaan Imperative vs Declarative UI
 * **Pengalaman Belajar:** 
