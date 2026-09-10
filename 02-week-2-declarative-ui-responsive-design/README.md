@@ -1,17 +1,29 @@
-##   Hasil Screenshot & Tampilan Aplikasi (Layout sederhana)
-Berikut adalah hasil tampilan implementasi kode pada praktikum 4 ini:
-![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\1.png)
+## 📸 Hasil Screenshot & Tampilan Aplikasi
 
-##   Hasil Screenshot & Tampilan Aplikasi (Dashboard responsif)
-Berikut adalah hasil tampilan implementasi kode pada praktikum 5 ini:
-![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\2.png)
-![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\3.png)
+### 1. Layout Sederhana (Praktikum 4)
+Berikut adalah hasil tampilan implementasi kode pada Praktikum 4:
 
-##   Hasil Screenshot & Tampilan Aplikasi (Tugas utama)
-Berikut adalah hasil tampilan implementasi kode pada praktikum 5 ini:
-![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\4.png)
-![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\5.png)
-![Screenshot Week 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\02-week-2-declarative-ui-responsive-design\screenshots\6.png)
+<p align="center">
+  <img src="screenshots/1.png" alt="Layout Sederhana" width="400" />
+</p>
+
+---
+
+### 2. Dashboard Responsif (Praktikum 5)
+Berikut adalah hasil tampilan implementasi layout dashboard responsif:
+
+| Tampilan Desktop / Luas | Tampilan Mobile / Sempit |
+| :---: | :---: |
+| ![Dashboard Desktop](screenshots/2.png) | ![Dashboard Mobile](screenshots/3.png) |
+
+---
+
+### 3. Tugas Utama (Praktikum 5)
+Berikut adalah hasil pengujian dan tampilan dari tugas utama:
+
+| Preview 1 | Preview 2 | Preview 3 |
+| :---: | :---: | :---: |
+| ![Tugas 1](screenshots/4.png) | ![Tugas 2](screenshots/5.png) | ![Tugas 3](screenshots/6.png) |
 
 #  AI Prompt Challenge AI
 
