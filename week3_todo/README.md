@@ -2,16 +2,16 @@
 
 ## Dokumentasi Hasil Praktikum
 
-### 1. Tampilan Awal / Daftar ToDo
+### 1. Tampilan Awal 
 ![Screenshot 1](doc/1.png)
 
 ### 2. Dialog Tambah Tugas Baru
 ![Screenshot 2](doc/2.png)
 
-### 3. Tampilan Halaman Statistik (AI Challenge - Sukses/Data)
+### 3. Tampilan Halaman Statistik
 ![Screenshot 3](doc/3.png)
 
-### 4. Tampilan Halaman Statistik (AI Challenge - Loading/Error)
+### 4. Tampilan Halaman Statistik
 ![Screenshot 4](doc/4.png)
 
 # AI Challenge — Dokumentasi
@@ -41,7 +41,9 @@ Requirements:
 *   Memastikan nggak ada yang mengubah state secara langsung (misal pakai `state.add()`), semua update state pakai penugasan baru (`state = ...`).
 
 ## 2. Dokumentasi Hasil AI Challange
-| ![Screenshot 5](doc/5.png) | ![Screenshot 6](doc/6.png) |
+| :--- | :---: | :--- |
+| ![Screenshot 5](doc/5.png) || ![Screenshot 6](doc/6.png) |
+| :--- | :---: | :--- |
 
 ### 3. Hasil Verifikasi Checklist
 
