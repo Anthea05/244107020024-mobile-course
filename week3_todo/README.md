@@ -1,17 +1,56 @@
-# week3_todo
+# Week 3 - ToDo App & Async State Management
 
-A new Flutter project.
+##  Dokumentasi Hasil Praktikum
 
-## Getting Started
+### 1. Tampilan Awal / Daftar ToDo
+![Screenshot 1](docs/1.png)
 
-This project is a starting point for a Flutter application.
+### 2. Dialog Tambah Tugas Baru
+![Screenshot 2](docs/2.png)
 
-A few resources to get you started if this is your first Flutter project:
+### 3. Tampilan Halaman Statistik (AI Challenge - Sukses/Data)
+![Screenshot 3](docs/3.png)
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### 4. Tampilan Halaman Statistik (AI Challenge - Loading/Error)
+![Screenshot 4](docs/4.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# AI Challenge — Dokumentasi
+
+## 1. Prompt yang Digunakan
+
+```text
+Buatkan halaman Flutter bernama StatsPage menggunakan flutter_riverpod.
+Requirements:
+- ConsumerWidget dengan satu AsyncNotifierProvider yang mensimulasikan
+  pengambilan data statistik (delay 2 detik, kadang gagal 30%).
+- UI harus menangani loading (spinner), error (pesan + tombol retry),
+  dan success (ListView 3 item).
+- Berikan unit test untuk notifier-nya.
+- Jelaskan setiap bagian kode dalam komentar.
+- Tambahan: pisahkan logika simulasi fetch (delay + peluang gagal)
+  menjadi fungsi top-level yang menerima parameter opsional
+  randomValue, supaya bisa diuji secara deterministik tanpa
+  bergantung pada angka acak sungguhan.
+
+**Struktur Unit Test:**
+*   **Awalnya:** Unit test-nya mwncoba memanggil provider asli berkali-kali terus berharap mendapat kondisi gagal/berhasil.
+*   **Masalahnya:** Jadinya *flaky*, waktu test-nya jadi lama, dan hasilnya nggak konsisten.
+*   **Perbaikannya:** memakai `provider.overrideWith(...)` dengan *fake notifier* buat misahin test dari efek samping seperti *delay* dan *random*.
+
+**Cek Manual:**
+*   Memastikan `ref.watch` hanya ditaruh di dalam `build() untuk otomatis *rebuild* layarnya.
+*   Memastikan `ref.read` hanya dipakai saat *callback* tombol *retry*, sesuai aturan dari modul.
+*   Memastikan nggak ada yang mengubah state secara langsung (misal pakai `state.add()`), semua update state pakai penugasan baru (`state = ...`).
+
+---
+
+### 3. Hasil Verifikasi Checklist
+
+| Pertanyaan Checklist | Status | Keterangan |
+| :--- | :---: | :--- |
+| State diubah secara *immutable*? | ✅ | memakai `state = AsyncValue...`, tidak terjadi mutasi list langsung. |
+| `ref.watch` cuma di `build()`, `ref.read` di *callback*? | ✅ | benar |
+| Ketiga state `AsyncValue` ditangani? | ✅ | pakai `.when()`|
+| Provider tipe eksplisit & tidak duplikat? | ✅ | memakai `AsyncNotifierProvider<StatsNotifier, List<String>>`. |
+| Pakai API Riverpod modern? | ✅ | memakai `AsyncNotifier` + `ConsumerWidget` (nggak pakai *StateNotifier* yang jadul). |
+| Lolos `flutter analyze` & `flutter test`? | ✅ | di-run tidak ada *warning*. |
