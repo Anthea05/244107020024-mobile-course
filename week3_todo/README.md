@@ -3,16 +3,16 @@
 ##  Dokumentasi Hasil Praktikum
 
 ### 1. Tampilan Awal / Daftar ToDo
-![Screenshot 1](docs/1.png)
+![Screenshot 1](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\1.png)
 
 ### 2. Dialog Tambah Tugas Baru
-![Screenshot 2](docs/2.png)
+![Screenshot 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\2.png)
 
 ### 3. Tampilan Halaman Statistik (AI Challenge - Sukses/Data)
-![Screenshot 3](docs/3.png)
+![Screenshot 3](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\3.png)
 
 ### 4. Tampilan Halaman Statistik (AI Challenge - Loading/Error)
-![Screenshot 4](docs/4.png)
+![Screenshot 4](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\4.png)
 
 # AI Challenge — Dokumentasi
 
