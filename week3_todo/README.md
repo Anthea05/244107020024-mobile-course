@@ -2,23 +2,23 @@
 
 ##  Dokumentasi Hasil Praktikum
 
+## Dokumentasi Hasil Praktikum
+
 ### 1. Tampilan Awal / Daftar ToDo
-![Screenshot 1](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\1.png)
+![Screenshot 1](doc/1.png)
 
 ### 2. Dialog Tambah Tugas Baru
-![Screenshot 2](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\2.png)
+![Screenshot 2](doc/2.png)
 
 ### 3. Tampilan Halaman Statistik (AI Challenge - Sukses/Data)
-![Screenshot 3](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\3.png)
+![Screenshot 3](doc/3.png)
 
 ### 4. Tampilan Halaman Statistik (AI Challenge - Loading/Error)
-![Screenshot 4](C:\Users\amodi\Videos\Semester 5\Pemrograman Mobile\244107020024-mobile-course\week3_todo\doc\4.png)
+![Screenshot 4](doc/4.png)
 
 # AI Challenge — Dokumentasi
 
 ## 1. Prompt yang Digunakan
-
-```text
 Buatkan halaman Flutter bernama StatsPage menggunakan flutter_riverpod.
 Requirements:
 - ConsumerWidget dengan satu AsyncNotifierProvider yang mensimulasikan
@@ -42,7 +42,8 @@ Requirements:
 *   Memastikan `ref.read` hanya dipakai saat *callback* tombol *retry*, sesuai aturan dari modul.
 *   Memastikan nggak ada yang mengubah state secara langsung (misal pakai `state.add()`), semua update state pakai penugasan baru (`state = ...`).
 
----
+## 2. Dokumentasi Hasil AI Challange
+| ![Screenshot 5](doc/5.png) | ![Screenshot 6](doc/6.png) |
 
 ### 3. Hasil Verifikasi Checklist
 
@@ -53,4 +54,5 @@ Requirements:
 | Ketiga state `AsyncValue` ditangani? | ✅ | pakai `.when()`|
 | Provider tipe eksplisit & tidak duplikat? | ✅ | memakai `AsyncNotifierProvider<StatsNotifier, List<String>>`. |
 | Pakai API Riverpod modern? | ✅ | memakai `AsyncNotifier` + `ConsumerWidget` (nggak pakai *StateNotifier* yang jadul). |
-| Lolos `flutter analyze` & `flutter test`? | ✅ | di-run tidak ada *warning*. |
+| Lolos `flutter analyze` & `flutter test`? | ✅ | di-run tidak ada *warning*.  |
+
