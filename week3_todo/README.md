@@ -1,7 +1,5 @@
 # Week 3 - ToDo App & Async State Management
 
-##  Dokumentasi Hasil Praktikum
-
 ## Dokumentasi Hasil Praktikum
 
 ### 1. Tampilan Awal / Daftar ToDo
