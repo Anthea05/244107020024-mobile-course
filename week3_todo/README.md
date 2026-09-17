@@ -46,7 +46,7 @@ Requirements:
 ### 3. Hasil Verifikasi Checklist
 
 | Pertanyaan Checklist | Keterangan |
-| :--- | :---: | :--- |
+| :--- | :---: |
 | State diubah secara *immutable*? | ya |
 | `ref.watch` cuma di `build()`, `ref.read` di *callback*? | benar |
 | Ketiga state `AsyncValue` ditangani? | pakai `.when()`|
