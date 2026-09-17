@@ -1,43 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
+import '../widgets/todo_tile.dart';
 
 class TodoPage extends ConsumerWidget {
   const TodoPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todos = ref.watch(todoListProvider);
+   
+    final todos = ref.watch(filteredTodoListProvider);
+    final filter = ref.watch(todoFilterProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('ToDo Riverpod')),
+      appBar: AppBar(
+        title: const Text('ToDo Riverpod'),
+        actions: [
+          PopupMenuButton<TodoFilter>(
+            initialValue: filter,
+            onSelected: (value) =>
+                ref.read(todoFilterProvider.notifier).set(value),
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: TodoFilter.all, child: Text('Semua')),
+              PopupMenuItem(value: TodoFilter.active, child: Text('Belum selesai')),
+              PopupMenuItem(value: TodoFilter.completed, child: Text('Selesai')),
+            ],
+            icon: const Icon(Icons.filter_list),
+          ),
+        ],
+      ),
       body: todos.isEmpty
           ? const Center(child: Text('Belum ada tugas'))
           : ListView.builder(
               itemCount: todos.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: Checkbox(
-                  value: todos[index].done,
-                  onChanged: (_) =>
-                      ref.read(todoListProvider.notifier).toggle(index),
-                ),
-                title: Text(
-                  todos[index].title,
-                  style: TextStyle(
-                      decoration: todos[index].done
-                          ? TextDecoration.lineThrough
-                          : null),
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () =>
-                      ref.read(todoListProvider.notifier).remove(index),
-                ),
-              ),
+              itemBuilder: (context, index) {
+                final todo = todos[index];
+                return TodoTile(
+                  todo: todo,
+                  onToggle: () => ref.read(todoListProvider.notifier).toggle(todo),
+                  onDelete: () => ref.read(todoListProvider.notifier).remove(todo),
+                );
+              },
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddDialog(context, ref),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add), // Ikon yang dicari robot
       ),
     );
   }
@@ -48,7 +55,10 @@ class TodoPage extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Tugas baru'),
-        content: TextField(controller: controller, autofocus: true),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+        ), // TextField yang dicari robot
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -57,13 +67,11 @@ class TodoPage extends ConsumerWidget {
           FilledButton(
             onPressed: () {
               if (controller.text.trim().isNotEmpty) {
-                ref
-                    .read(todoListProvider.notifier)
-                    .add(controller.text.trim());
+                ref.read(todoListProvider.notifier).add(controller.text.trim());
               }
               Navigator.pop(context);
             },
-            child: const Text('Tambah'),
+            child: const Text('Tambah'), 
           ),
         ],
       ),

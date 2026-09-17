@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'pages/stats_page.dart';
+import 'router.dart';
 
 void main() {
   runApp(
@@ -16,8 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: StatsPage(), 
+    
+    return MaterialApp.router(
+      routerConfig: appRouter,
     );
   }
 }

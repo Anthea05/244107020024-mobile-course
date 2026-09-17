@@ -1,10 +1,9 @@
 
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:week3_todo/pages/stats_page.dart'; 
+import 'package:week3_todo/pages/stats_page.dart';
+
 Future<void> tungguSampaiSelesai(
   ProviderContainer container,
   AsyncNotifierProvider<StatsNotifier, List<String>> provider,
@@ -20,7 +19,6 @@ void main() {
     test(
       'mengembalikan 3 item statistik saat randomValue di atas 0.3 (sukses)',
       () async {
-        
         final hasil = await fetchStatsData(randomValue: 0.9);
 
         expect(hasil, isA<List<String>>());
@@ -29,7 +27,6 @@ void main() {
     );
 
     test('melempar Exception saat randomValue di bawah 0.3 (gagal)', () async {
-  
       expect(() => fetchStatsData(randomValue: 0.1), throwsA(isA<Exception>()));
     });
   });
@@ -37,10 +34,7 @@ void main() {
   group('StatsNotifier via ProviderContainer', () {
     test('state awal berubah dari loading -> data ketika berhasil', () async {
       final container = ProviderContainer(
-        overrides: [
-          
-          statsProvider.overrideWith(_FakeSuccessNotifier.new),
-        ],
+        overrides: [statsProvider.overrideWith(_FakeSuccessNotifier.new)],
       );
       addTearDown(container.dispose);
 
