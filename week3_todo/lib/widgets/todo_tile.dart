@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
+
 import '../providers/todo_provider.dart';
 
 class TodoTile extends StatelessWidget {
-  // Variabel penampung data dan aksi
   final Todo todo;
   final VoidCallback onToggle;
   final VoidCallback onDelete;
-
+  final VoidCallback? onTap;
   const TodoTile({
     super.key,
     required this.todo,
     required this.onToggle,
     required this.onDelete,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Checkbox(
-        value: todo.done,
-        onChanged: (_) => onToggle(), // Memicu aksi centang
-      ),
+      onTap: onTap,
+      leading: Checkbox(value: todo.done, onChanged: (_) => onToggle()),
       title: Text(
         todo.title,
         style: TextStyle(
-         
           decoration: todo.done ? TextDecoration.lineThrough : null,
         ),
       ),

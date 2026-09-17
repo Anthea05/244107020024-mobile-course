@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import '../providers/todo_provider.dart';
 import '../widgets/todo_tile.dart';
 
@@ -8,7 +10,6 @@ class TodoPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   
     final todos = ref.watch(filteredTodoListProvider);
     final filter = ref.watch(todoFilterProvider);
 
@@ -22,8 +23,14 @@ class TodoPage extends ConsumerWidget {
                 ref.read(todoFilterProvider.notifier).set(value),
             itemBuilder: (context) => const [
               PopupMenuItem(value: TodoFilter.all, child: Text('Semua')),
-              PopupMenuItem(value: TodoFilter.active, child: Text('Belum selesai')),
-              PopupMenuItem(value: TodoFilter.completed, child: Text('Selesai')),
+              PopupMenuItem(
+                value: TodoFilter.active,
+                child: Text('Belum selesai'),
+              ),
+              PopupMenuItem(
+                value: TodoFilter.completed,
+                child: Text('Selesai'),
+              ),
             ],
             icon: const Icon(Icons.filter_list),
           ),
@@ -37,8 +44,12 @@ class TodoPage extends ConsumerWidget {
                 final todo = todos[index];
                 return TodoTile(
                   todo: todo,
-                  onToggle: () => ref.read(todoListProvider.notifier).toggle(todo),
-                  onDelete: () => ref.read(todoListProvider.notifier).remove(todo),
+                  onToggle: () =>
+                      ref.read(todoListProvider.notifier).toggle(todo),
+                  onDelete: () =>
+                      ref.read(todoListProvider.notifier).remove(todo),
+
+                  onTap: () => context.push('/todo/${todo.id}'),
                 );
               },
             ),
@@ -71,7 +82,7 @@ class TodoPage extends ConsumerWidget {
               }
               Navigator.pop(context);
             },
-            child: const Text('Tambah'), 
+            child: const Text('Tambah'), // Tombol yang dicari robot
           ),
         ],
       ),

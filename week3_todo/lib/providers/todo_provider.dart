@@ -1,12 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Todo {
-  Todo(this.title, {this.done = false});
+  Todo(this.title, {this.done = false, int? id})
+    : id = id ?? DateTime.now().microsecondsSinceEpoch;
+
+  final int id;
   final String title;
   final bool done;
 
   Todo copyWith({String? title, bool? done}) =>
-      Todo(title ?? this.title, done: done ?? this.done);
+      Todo(title ?? this.title, done: done ?? this.done, id: id);
 }
 
 class TodoListNotifier extends Notifier<List<Todo>> {
@@ -17,12 +20,6 @@ class TodoListNotifier extends Notifier<List<Todo>> {
 
   void add(String title) => state = [...state, Todo(title)];
 
-  // Catatan: toggle & remove sengaja diubah dari berbasis `index` jadi
-  // berbasis objek `Todo` itu sendiri. Ini penting karena sekarang ada
-  // fitur filter (lihat filteredTodoListProvider di bawah) — kalau UI
-  // sedang nampilin daftar yang sudah difilter, `index` di layar BEDA
-  // dengan `index` di state asli. Kalau tetap pakai index, bisa salah
-  // centang/hapus tugas yang lain.
   void toggle(Todo todo) {
     final index = state.indexOf(todo);
     if (index == -1) return;
@@ -36,19 +33,20 @@ class TodoListNotifier extends Notifier<List<Todo>> {
   }
 }
 
-final todoListProvider =
-    NotifierProvider<TodoListNotifier, List<Todo>>(TodoListNotifier.new);
+final todoListProvider = NotifierProvider<TodoListNotifier, List<Todo>>(
+  TodoListNotifier.new,
+);
 
-// ------------------------------------------------------------
-// FILTER
-// ------------------------------------------------------------
-// Enum buat 3 pilihan filter yang biasa dipakai di aplikasi Todo.
+final todoByIdProvider = Provider.family<Todo?, int>((ref, id) {
+  final todos = ref.watch(todoListProvider);
+  for (final todo in todos) {
+    if (todo.id == id) return todo;
+  }
+  return null;
+});
+
 enum TodoFilter { all, active, completed }
 
-// Notifier kecil buat nyimpen filter yang sedang dipilih (default: semua).
-// Dipakai Notifier (bukan StateProvider) karena flutter_riverpod versi
-// terbaru sudah tidak menyertakan StateProvider — semua pola state
-// sekarang disatukan lewat Notifier/AsyncNotifier.
 class TodoFilterNotifier extends Notifier<TodoFilter> {
   @override
   TodoFilter build() => TodoFilter.all;
@@ -56,8 +54,9 @@ class TodoFilterNotifier extends Notifier<TodoFilter> {
   void set(TodoFilter filter) => state = filter;
 }
 
-final todoFilterProvider =
-    NotifierProvider<TodoFilterNotifier, TodoFilter>(TodoFilterNotifier.new);
+final todoFilterProvider = NotifierProvider<TodoFilterNotifier, TodoFilter>(
+  TodoFilterNotifier.new,
+);
 
 final filteredTodoListProvider = Provider<List<Todo>>((ref) {
   final todos = ref.watch(todoListProvider);

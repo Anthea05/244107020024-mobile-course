@@ -54,3 +54,21 @@ Requirements:
 | Pakai API Riverpod modern? | memakai `AsyncNotifier` + `ConsumerWidget` |
 | Lolos `flutter analyze` & `flutter test`? | ![Screenshot 5](doc/5.png)    ![Screenshot 6](doc/6.png) |
 
+### Refleksi
+
+**1. Kapan `setState` masih cukup, dan kapan state harus naik ke Riverpod?**
+pakai setState kalau urusannya cuma buat satu layar aja dan nggak ngaruh ke halaman lain.
+
+**2. Apa perbedaan `context.go` dan `context.push`, dan kapan masing-masing tepat digunakan?**
+*   **`context.go`** mengganti lokasi saat ini di dalam riwayat navigasi (menimpa halaman, bukan menumpuk). Sangat cocok untuk perpindahan antar *tab* yang sejajar (seperti pada *Bottom NavigationBar*), di mana tidak ada konsep hierarki halaman yang lebih dalam, sehingga tombol *back* tidak diperlukan.
+*   **`context.push`** menambahkan halaman baru di atas tumpukan riwayat yang sudah ada. Sangat cocok digunakan untuk masuk lebih dalam ke suatu alur spesifik (misal: dari daftar tugas menelusuri ke detail satu tugas tertentu). Dengan ini, tombol *back* otomatis aktif dan riwayat halaman sebelumnya tidak hilang.
+
+**3. Bagaimana `AsyncValue` mencegah bug dibanding tiga boolean terpisah?**
+*   Kalau kita bikin variabel manual (isLoading, isError, hasData), sering banget kejadian human error—contohnya data udah muncul, tapi spinner loadingnya masih muter karena lupa di-set false. kalau pakai AsyncValue  sistem memaksa cuma bisa 1 kondisi dalam 1 waktu
+
+**4. Bagian mana dari hasil AI yang diperbaiki, dan mengapa?**
+Beberapa perbaikan teknis yang dilakukan pada kode hasil keluaran AI antara lain:
+*   **Memisahkan logika *fetch* menjadi fungsi *top-level*:** Logika *delay* dan angka acak (*random* untuk probabilitas error 30%) dikeluarkan dari kelas Notifier agar aplikasi lebih mudah diuji (*testable*). Hal ini membuat kita bisa menyuntikkan data palsu (*mock/fake*) yang deterministik saat *unit test*, sehingga mencegah *test* gagal secara acak (*flaky*).
+*   **Menyesuaikan strategi tunggu pada Widget Test:** Mengganti metode `.pump()` dari AI menjadi `.pumpAndSettle()`. Hal ini wajib diperbaiki karena transisi dari *GoRouter* dan animasi *pop-up dialog* membutuhkan waktu render beberapa *frame*, sehingga robot *tester* tidak terburu-buru melakukan pengecekan layar sebelum komponen selesai dimuat.
+*   **Pengamanan error dengan `AsyncValue.guard`:** Mengganti blok `try-catch` manual buatan AI pada fitur *retry* menggunakan metode bawaan Riverpod ini, agar transisi antara state *loading*, *error*, dan *data* tertangani jauh lebih rapi dan aman.
+
