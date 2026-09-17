@@ -8,13 +8,13 @@
 ### 1. Tampilan Awal 
 ![Screenshot 1](doc/1.png)
 
-### 2. Dialog Tambah Tugas Baru
+### 2. Tampilan tambah tugas
 ![Screenshot 2](doc/2.png)
 
-### 3. Tampilan Halaman Daftar Tugas Baru
+### 3. Tampilan daftar tugas
 ![Screenshot 3](doc/3.png)
 
-### 4. Tampilan checkbox setelah diklik
+### 4. Tampilan daftar tugas sudah selesai
 ![Screenshot 4](doc/4.png)
 
 # AI Challenge — Dokumentasi
@@ -45,7 +45,7 @@ Requirements:
 
 ### 3. Hasil Verifikasi Checklist
 
-| Pertanyaan Checklist | Status | Keterangan |
+| Pertanyaan Checklist | Keterangan |
 | :--- | :---: | :--- |
 | State diubah secara *immutable*? | ya |
 | `ref.watch` cuma di `build()`, `ref.read` di *callback*? | benar |
