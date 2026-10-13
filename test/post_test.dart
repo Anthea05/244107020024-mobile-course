@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 // Ganti prefix import ini sesuai direktori file atau package name project Anda
 import 'package:my_first_app/data/models/post.dart';
-import 'package:my_first_app/data/network_errors.dart';
 import 'package:my_first_app/data/providers.dart';
 import 'package:my_first_app/data/repositories/post_repository.dart';
 

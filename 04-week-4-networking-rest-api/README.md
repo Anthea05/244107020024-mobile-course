@@ -44,3 +44,34 @@
     > *"Tidak dapat terhubung ke server. Periksa internet Anda."*
   - Begitu URL dikembalikan ke `https://jsonplaceholder.typicode.com` dan tombol **"Coba lagi"** ditekan, aplikasi kembali memuat data post dengan normal.
 * **Status:** Berhasil / Exception terisolasi dengan baik di layer Repository & Provider tanpa merusak aplikasi.
+
+## Checklist Verifikasi Mandiri
+
+- [x] **UI tidak memanggil Dio langsung**: Seluruh pemanggilan HTTP ditangani secara terisolasi di layer `Repository` (`PostRepository` & `CommentRepository`) dan dikonsumsi oleh widget melalui layer Riverpod Provider (`AsyncNotifierProvider`, `NotifierProvider`, dan `FutureProvider`).
+- [x] **Empat state tampil benar**:
+  - `Loading`: Menampilkan `CircularProgressIndicator`.
+  - `Error (+ retry)`: Menampilkan pesan kesalahan ramah pengguna (`friendlyErrorMessage`) serta tombol **Coba lagi** untuk memicu invalidate/refresh.
+  - `Empty`: Menampilkan teks penanganan ketika data kosong (*"Belum ada data dari server."*).
+  - `Success`: Menampilkan daftar item dalam bentuk list data secara lengkap.
+- [x] **Pagination (Infinite Scroll)**:
+  - Data termuat bertahap (10 item per request) saat posisi scroll mencapai ambang 200px sebelum batas akhir.
+  - Terdapat guard condition (`state.isLoadingMore || !state.hasMore`) sehingga tidak memicu request ganda saat request sebelumnya masih berjalan.
+  - Muncul teks *"Semua data termuat."* saat mencapai batas akhir post (total 100 data).
+- [x] **Analisis kode & unit test**:
+  - `flutter analyze`: Lolos tanpa issue (0 issue / clean).
+  - `flutter test`: Semua skenario pengujian pada `post_test.dart` dan `comment_test.dart` berstatus **passed**.
+- [x] **Dokumentasi AI Challenge**: Seluruh prompt, kode generator, perbaikan, dan evaluasi checklist telah diverifikasi dan didokumentasikan di folder `docs/`.
+
+---
+
+## AI Challenge Verification Checklist
+
+### 1. Prompt AI yang Digunakan
+```text
+Buatkan repository layer Flutter untuk endpoint GET /comments?postId={id} dari JSONPlaceholder menggunakan Dio + flutter_riverpod.
+Requirements:
+- Model Comment dengan fromJson aman null (postId, id, name, email, body).
+- CommentRepository dengan method fetchComments(postId) + timeout 10 detik.
+- AsyncNotifierProvider dengan penanganan error otomatis (AsyncError) dan fungsi pesan error ramah pengguna untuk timeout, connection error, 404, dan 500.
+- Satu unit test untuk fromJson dengan field yang hilang.
+Jelaskan setiap bagian kode dalam komentar.

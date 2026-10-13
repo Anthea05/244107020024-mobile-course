@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import '../lib/data/models/comment.dart';
+import 'package:my_first_app/data/models/comment.dart';
 
 void main() {
   test('Comment.fromJson aman jika field hilang atau null', () {
