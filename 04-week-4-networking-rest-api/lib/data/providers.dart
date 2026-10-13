@@ -3,10 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'api_client.dart';
 import 'models/post.dart';
-import 'repositories/post_repository.dart';import 'dart:async';
-import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'api_client.dart';
+import 'repositories/post_repository.dart';
 
 final dioProvider = Provider<Dio>((ref) => createDio());
 
