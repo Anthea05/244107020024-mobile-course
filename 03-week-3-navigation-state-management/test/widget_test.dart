@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_app/main.dart';
+import 'package:week3_todo/main.dart';
 
 void main() {
   testWidgets('Dashboard satu kolom di layar sempit', (tester) async {
@@ -8,6 +8,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
+    // Diubah dari const week3_todo() menjadi const MyApp()
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
