@@ -1,11 +1,51 @@
 import 'package:flutter/material.dart';
-import 'data/local/note.dart';
-import 'data/repositories/note_repository.dart';
-import 'data/repositories/PostRepository.dart';
-import 'data/local/post.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+import 'data/local/db.dart';
+import 'data/local/note.dart';
+import 'data/local/post.dart';
+import 'data/repositories/note_repository.dart';
+import 'data/sync.dart';
+import 'presentation/pages/note_detail_page.dart';
+import 'presentation/widgets/note_tile.dart';
+
+final NoteRepository globalNoteRepo = NoteRepository();
+final SyncService globalSyncService = SyncService(
+  noteRepository: globalNoteRepo,
+  openDb: openNotesDb,
+);
+
+final GoRouter _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const OfflineFirstHomePage(),
+      routes: [
+        GoRoute(
+          path: 'note/:id',
+          builder: (context, state) {
+            final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+            return NoteDetailPage(noteId: id, noteRepo: globalNoteRepo);
+          },
+        ),
+      ],
+    ),
+  ],
+);
+
+// Notifier sederhana untuk tema gelap/terang (SharedPreferences)
+final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Baca preferensi tema yang tersimpan
+  final prefs = await SharedPreferences.getInstance();
+  final isDark = prefs.getBool('is_dark_mode') ?? false;
+  themeNotifier.value = isDark ? ThemeMode.dark : ThemeMode.light;
+
   runApp(const MyApp());
 }
 
@@ -14,14 +54,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Offline First App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const OfflineFirstHomePage(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, currentMode, _) {
+        return MaterialApp.router(
+          routerConfig: _router,
+          debugShowCheckedModeBanner: false,
+          title: 'Offline First App',
+          themeMode: currentMode,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+          ),
+        );
+      },
     );
   }
 }
@@ -34,19 +90,40 @@ class OfflineFirstHomePage extends StatefulWidget {
 }
 
 class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
-  final NoteRepository _noteRepo = NoteRepository();
-  final PostRepository _postRepo = PostRepository();
-
   List<Note> _notes = [];
   List<Post> _posts = [];
   int _dirtyCount = 0;
   bool _forceOffline = false;
   bool _isLoading = false;
+  String _lastOpened = '-';
 
   @override
   void initState() {
     super.initState();
-    _refreshAll();
+    _initPreferencesAndData();
+  }
+
+  // Inisialisasi SharedPreferences & Data Lokal
+  Future<void> _initPreferencesAndData() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    // Baca waktu terakhir dibuka sebelumnya
+    final savedTime = prefs.getString('last_opened_at');
+    if (savedTime != null) {
+      setState(() {
+        _lastOpened = savedTime.substring(0, 19).replaceAll('T', ' ');
+      });
+    } else {
+      setState(() {
+        _lastOpened = 'Baru pertama kali dibuka';
+      });
+    }
+
+    // Perbarui waktu buka sekarang ke SharedPreferences
+    await prefs.setString('last_opened_at', DateTime.now().toIso8601String());
+
+    // Muat data notes dan cached posts
+    await _refreshAll();
   }
 
   Future<void> _refreshAll() async {
@@ -54,10 +131,10 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
     await _loadPosts();
   }
 
-  // Muat data Catatan Lokal & Hitung Status Dirty
+  // 1. Muat Catatan Lokal & Hitung Status Dirty
   Future<void> _loadNotes() async {
-    final notes = await _noteRepo.fetchNotes();
-    final count = await _noteRepo.countDirty();
+    final notes = await globalNoteRepo.fetchNotes();
+    final count = await globalNoteRepo.countDirty();
     if (mounted) {
       setState(() {
         _notes = notes;
@@ -66,19 +143,16 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
     }
   }
 
-  // Muat Cache-First Post
   Future<void> _loadPosts() async {
     setState(() => _isLoading = true);
     try {
       if (_forceOffline) {
-        // Simulasi Offline: hanya ambil data dari SQLite cache
-        final cached = await _postRepo.readCachedPosts();
+        final cached = await globalSyncService.readCachedPosts();
         if (mounted) setState(() => _posts = cached);
       } else {
-        // Mode Online: ambil cache seketika, background update
-        final cached = await _postRepo.loadPostsCacheFirst(
-          onRefreshDone: () async {
-            final updated = await _postRepo.readCachedPosts();
+        final cached = await globalSyncService.loadPostsCacheFirst(
+          onBackgroundRefreshDone: () async {
+            final updated = await globalSyncService.readCachedPosts();
             if (mounted) setState(() => _posts = updated);
           },
         );
@@ -91,17 +165,17 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
     }
   }
 
-  // Tambah Catatan Baru (Secara default berstatus Dirty = 1)
+  // 2. Tambah Catatan Baru
   Future<void> _addNote() async {
     final count = _notes.length + 1;
-    await _noteRepo.addNote(
+    await globalNoteRepo.addNote(
       title: 'Catatan #$count',
       body: 'Dibuat saat mode ${_forceOffline ? "Offline" : "Online"}',
     );
     await _loadNotes();
   }
 
-  // Sinkronisasi Catatan
+  // 3. Sinkronisasi Catatan
   Future<void> _handleSync() async {
     if (_forceOffline) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -113,7 +187,7 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
       return;
     }
 
-    final syncedCount = await _noteRepo.syncNotes();
+    final syncedCount = await globalSyncService.syncNotes();
     await _loadNotes();
 
     if (mounted) {
@@ -130,36 +204,56 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
     }
   }
 
+  // Toggle Tema Terang / Gelap
+  Future<void> _toggleTheme() async {
+    final isDark = themeNotifier.value == ThemeMode.dark;
+    themeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_dark_mode', !isDark);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = themeNotifier.value == ThemeMode.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Praktikum 3: Offline First'),
         actions: [
-          // 1. Toggle forceOffline
+          // Toggle Tema Gelap / Terang (SharedPreferences)
+          IconButton(
+            tooltip: isDark ? 'Mode Terang' : 'Mode Gelap',
+            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+            onPressed: _toggleTheme,
+          ),
+          // Toggle forceOffline
           Row(
             children: [
               Icon(
                 _forceOffline ? Icons.cloud_off : Icons.cloud_done,
-                color: _forceOffline ? Colors.orange : Colors.white,
+                color: _forceOffline ? Colors.orange : Colors.grey,
               ),
               Switch(
                 value: _forceOffline,
-                activeColor: Colors.amber,
+                activeThumbColor: Colors.amber,
                 onChanged: (val) {
                   setState(() => _forceOffline = val);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       duration: const Duration(seconds: 1),
-                      content: Text(val ? 'Mode forceOffline: AKTIF' : 'Mode forceOffline: NONAKTIF'),
+                      content: Text(
+                        val
+                            ? 'Mode forceOffline: AKTIF'
+                            : 'Mode forceOffline: NONAKTIF',
+                      ),
                     ),
                   );
                 },
               ),
             ],
           ),
-
-          // 2. Tombol Sync beserta Badge Dirty
+          // Tombol Sync & Badge Dirty
           Badge(
             label: Text('$_dirtyCount'),
             isLabelVisible: _dirtyCount > 0,
@@ -180,9 +274,29 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
               child: ListView(
                 padding: const EdgeInsets.all(12),
                 children: [
-                  // --- SEKSI CATATAN (NOTES & DIRTY STATUS) ---
+                  // Info Waktu Terakhir Dibuka (SharedPreferences)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Terakhir dibuka: $_lastOpened',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Daftar Catatan
                   Card(
-                    color: Colors.amber.shade50,
+                    color: isDark ? Colors.grey.shade900 : Colors.amber.shade50,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -193,7 +307,10 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
                             children: [
                               Text(
                                 'Daftar Catatan (Dirty: $_dirtyCount)',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                               ElevatedButton.icon(
                                 onPressed: _addNote,
@@ -204,45 +321,44 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
                           ),
                           const Divider(),
                           if (_notes.isEmpty)
-                            const Text('Belum ada catatan lokal.')
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text('Belum ada catatan lokal.'),
+                            )
                           else
                             ..._notes.map(
-                              (note) => ListTile(
-                                dense: true,
-                                title: Text(note.title),
-                                subtitle: Text(note.body),
-                                trailing: Chip(
-                                  label: Text(
-                                    note.dirty ? 'Dirty' : 'Synced',
-                                    style: TextStyle(
-                                      color: note.dirty ? Colors.deepOrange : Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  backgroundColor: note.dirty ? Colors.orange.shade100 : Colors.green.shade100,
-                                ),
+                              (note) => NoteTile(
+                                note: note,
+                                onTap: () {
+                                  if (note.id != null) {
+                                    context.go('/note/${note.id}');
+                                  }
+                                },
+                                onDelete: () async {
+                                  if (note.id != null) {
+                                    await globalNoteRepo.deleteNote(note.id!);
+                                    await _loadNotes();
+                                  }
+                                },
                               ),
                             ),
                         ],
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
-                  // --- SEKSI POST CACHE-FIRST ---
                   const Text(
                     'Cached Posts (JSONPlaceholder)',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
-
                   if (_posts.isEmpty)
                     const Center(
                       child: Padding(
                         padding: EdgeInsets.all(24.0),
-                        child: Text('Cache kosong. Matikan forceOffline lalu tarik untuk refresh.'),
+                        child: Text(
+                          'Cache kosong. Matikan forceOffline lalu refresh.',
+                        ),
                       ),
                     )
                   else
@@ -251,8 +367,16 @@ class _OfflineFirstHomePageState extends State<OfflineFirstHomePage> {
                             margin: const EdgeInsets.symmetric(vertical: 4),
                             child: ListTile(
                               leading: CircleAvatar(child: Text('${post.id}')),
-                              title: Text(post.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                              subtitle: Text(post.body, maxLines: 2, overflow: TextOverflow.ellipsis),
+                              title: Text(
+                                post.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(
+                                post.body,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ),

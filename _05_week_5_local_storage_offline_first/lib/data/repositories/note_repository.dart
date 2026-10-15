@@ -1,6 +1,16 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import '../local/db.dart';
 import '../local/note.dart';
+
+final noteRepositoryProvider = Provider<NoteRepository>((ref) {
+  return NoteRepository();
+});
+
+final notesProvider = FutureProvider<List<Note>>((ref) async {
+  final repo = ref.watch(noteRepositoryProvider);
+  return repo.fetchNotes();
+});
 
 class NoteRepository {
   final Future<Database> Function() _openDb;
@@ -12,6 +22,18 @@ class NoteRepository {
     final db = await _openDb();
     final rows = await db.query('notes', orderBy: 'updated_at DESC');
     return rows.map(Note.fromMap).toList();
+  }
+
+  Future<Note?> fetchNoteById(int id) async {
+    final db = await _openDb();
+    final rows = await db.query(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (rows.isEmpty) return null;
+    return Note.fromMap(rows.first);
   }
 
   Future<Note> addNote({required String title, String body = ''}) async {
@@ -37,7 +59,6 @@ class NoteRepository {
     await db.delete('notes', where: 'id = ?', whereArgs: [id]);
   }
 
-  // 1. Hitung catatan kotor (dirty = 1)
   Future<int> countDirty() async {
     final db = await _openDb();
     final rows = await db.rawQuery(
@@ -46,23 +67,8 @@ class NoteRepository {
     return ((rows.first['c'] as num?)?.toInt() ?? 0);
   }
 
-  // 2. Tandai semua catatan kotor jadi bersih (dirty = 0)
   Future<void> markAllSynced() async {
     final db = await _openDb();
     await db.update('notes', {'dirty': 0}, where: 'dirty = 1');
-  }
-
-  // 3. Logika sync sesuai modul
-  Future<int> syncNotes() async {
-    final dirtyCount = await countDirty();
-    if (dirtyCount == 0) return 0;
-
-    // Simulasi jeda kirim data ke server
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Bersihkan status dirty
-    await markAllSynced();
-
-    return dirtyCount;
   }
 }

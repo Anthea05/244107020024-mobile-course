@@ -13,14 +13,15 @@ Future<Database> openNotesDb() async {
           title TEXT NOT NULL,
           body TEXT NOT NULL DEFAULT '',
           updated_at TEXT NOT NULL,
-          dirty INTEGER NOT NULL DEFAULT 0
+          dirty INTEGER NOT NULL DEFAULT 1
         )
       ''');
       await db.execute('''
         CREATE TABLE cached_posts(
           id INTEGER PRIMARY KEY,
-          payload TEXT NOT NULL,
-          cached_at TEXT NOT NULL
+          userId INTEGER,
+          title TEXT,
+          body TEXT
         )
       ''');
     },
