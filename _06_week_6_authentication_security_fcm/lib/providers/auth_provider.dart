@@ -3,20 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/auth_repository.dart';
 import '../data/token_store.dart';
 
+// Provider pendukung
 final tokenStoreProvider = Provider((ref) => TokenStore());
 final authRepositoryProvider = Provider((ref) => AuthRepository());
 
+// Provider utama auth state
 final authStateProvider =
     AsyncNotifierProvider<AuthNotifier, bool>(AuthNotifier.new);
 
 class AuthNotifier extends AsyncNotifier<bool> {
   @override
-  FutureOr<bool> build() async {
+  Future<bool> build() async {
     final token = await ref.watch(tokenStoreProvider).readAccess();
     return token != null;
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final session = await ref
@@ -29,7 +31,6 @@ class AuthNotifier extends AsyncNotifier<bool> {
 
       return true;
     });
-    return state.value ?? false;
   }
 
   Future<void> logout() async {

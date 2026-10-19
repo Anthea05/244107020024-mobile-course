@@ -1,38 +1,23 @@
-import 'package:dio/dio.dart';
-import 'auth_repository.dart';
-import 'token_store.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-Dio buildApiClient(TokenStore store, AuthRepository auth) {
-  final dio = Dio(BaseOptions(baseUrl: 'https://example-campus-api.test'));
+class TokenStore {
+  TokenStore({FlutterSecureStorage? storage})
+      : _storage = storage ?? const FlutterSecureStorage();
 
-  dio.interceptors.add(QueuedInterceptorsWrapper(
-    onRequest: (options, handler) async {
-      final access = await store.readAccess();
-      if (access != null) {
-        options.headers['Authorization'] = 'Bearer $access';
-      }
-      handler.next(options);
-    },
-    onError: (e, handler) async {
-      if (e.response?.statusCode == 401) {
-        final refresh = await store.readRefresh();
-        if (refresh == null) return handler.next(e);
+  final FlutterSecureStorage _storage;
+  static const _accessKey = 'access_token';
+  static const _refreshKey = 'refresh_token';
 
-        try {
-          final renewed = await auth.refresh(refresh);
-          await store.save(access: renewed, refresh: refresh);
+  Future<void> save({
+    required String access,
+    required String refresh,
+  }) async {
+    await _storage.write(key: _accessKey, value: access);
+    await _storage.write(key: _refreshKey, value: refresh);
+  }
 
-          final retry = await dio.fetch(
-            e.requestOptions..headers['Authorization'] = 'Bearer $renewed',
-          );
-          return handler.resolve(retry);
-        } catch (_) {
-          await store.clear(); // Jika refresh ikut expired/gagal -> logout
-        }
-      }
-      handler.next(e);
-    },
-  ));
+  Future<String?> readAccess() => _storage.read(key: _accessKey);
+  Future<String?> readRefresh() => _storage.read(key: _refreshKey);
 
-  return dio;
+  Future<void> clear() => _storage.deleteAll();
 }

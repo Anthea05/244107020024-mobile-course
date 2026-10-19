@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+import 'firebase_options.dart'; // BARU: dibuat oleh `flutterfire configure`
 import 'pages/announcement_page.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'providers/auth_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // BARU
+  );
+
   runApp(const ProviderScope(child: CampusNotifyApp()));
 }
 
@@ -28,16 +35,16 @@ class CampusNotifyApp extends ConsumerWidget {
       routes: [
         GoRoute(
           path: '/login',
-          builder: (_, _) => const LoginPage(),
+          builder: (_, __) => const LoginPage(),
         ),
         GoRoute(
           path: '/',
-          builder: (_, _) => const HomePage(),
+          builder: (_, __) => const HomePage(),
         ),
         GoRoute(
           path: '/pengumuman/:id',
-          builder: (_, state) => AnnouncementPage(
-            id: state.pathParameters['id'] ?? '',
+          builder: (_, s) => AnnouncementPage(
+            id: s.pathParameters['id'] ?? '',
           ),
         ),
       ],

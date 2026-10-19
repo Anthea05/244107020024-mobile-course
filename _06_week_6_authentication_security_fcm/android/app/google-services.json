@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677434837336",
+    "project_id": "week6authenticationsecurityfcm",
+    "storage_bucket": "week6authenticationsecurityfcm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677434837336:android:9e4eefedceaa3733347d2d",
+        "android_client_info": {
+          "package_name": "com.example.campus_notify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5P406ZoQX7T8qrzjGwON3t-3SuWvZIk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
