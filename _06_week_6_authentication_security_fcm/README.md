@@ -13,9 +13,9 @@ Berikut adalah hasil pengujian klik notifikasi dari ketiga *state* aplikasi deng
 
 | State Aplikasi | Skenario Kondisi & Aksi | Hasil Ekspektasi & Sistem | Status | Bukti Screenshot |
 | :--- | :--- | :--- | :--- | :--- |
-| **Foreground** | Aplikasi sedang dibuka/aktif. Pesan dikirim dari Firebase. | Notifikasi lokal (banner manual) muncul. | ✅ Berhasil | ![Foreground](screenshots/notif_foreground.png) |
-| **Background** | Aplikasi di-*minimize* (berada di *home screen*). Pesan dikirim. | Banner bawaan OS muncul, klik narik aplikasi ke depan. | ✅ Berhasil | ![Background](screenshots/notif_background.png) |
-| **Terminated** | Aplikasi ditutup paksa (*swipe* dari *recent apps*). Pesan dikirim. | Aplikasi melakukan *cold boot* dari notifikasi. | ✅ Berhasil | ![Terminated](screenshots/notif_terminated.png) |
+| **Foreground** | Aplikasi sedang dibuka/aktif. Pesan dikirim dari Firebase. | Notifikasi lokal (banner manual) muncul. | ✅ Berhasil | ![Foreground](screenshots/notif_foreground.jpeg) |
+| **Background** | Aplikasi di-*minimize* (berada di *home screen*). Pesan dikirim. | Banner bawaan OS muncul, klik narik aplikasi ke depan. | ✅ Berhasil | ![Background](screenshots/notif_background.jpeg) |
+| **Terminated** | Aplikasi ditutup paksa (*swipe* dari *recent apps*). Pesan dikirim. | Aplikasi melakukan *cold boot* dari notifikasi. | ✅ Berhasil | ![Terminated](screenshots/notif_terminated.jpeg) |
 
 ## 3. Tugas Refleksi
 | Pertanyaan Refleksi | Analisis & Jawaban Teknis |
