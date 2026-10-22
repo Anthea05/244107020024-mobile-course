@@ -78,10 +78,10 @@ Fitur yang di-refactor secara penuh menjadi Clean Architecture: **Notes / Catata
 ## 🧠 Refleksi
 
 **1. Mengapa interface repository harus tinggal di domain, bukan di data? Apa yang rusak bila dibalik?**
-Interface harus berada di layer domain untuk menerapkan prinsip *Dependency Inversion*. Layer domain berisi logika bisnis inti dan tidak boleh tahu menahu soal teknologi eksternal (API/Database). Jika dibalik (interface ada di data), layer domain harus mengimpor layer data, sehingga logika bisnis akan bergantung erat pada package eksternal. Hal ini merusak arsitektur dan membuat testing terisolasi menjadi tidak mungkin dilakukan.
+Antarmuka harus ditempatkan di lapisan domain untuk menerapkan prinsip Dependency Inversion. Lapisan domain mengandung logika bisnis fundamental dan seharusnya tidak terlibat dalam hal teknologi eksternal (API/Database). Jika posisi antarmuka dibalik (berada di lapisan data), lapisan domain harus menarik lapisan data, menjadikan logika bisnis sangat bergantung pada paket luar. Ini akan merusak struktur arsitektur dan membuat pengujian terpisah menjadi tidak mungkin dilaksanakan.
 
 **2. Kapan use case benar-benar dibutuhkan, dan kapan repository langsung ke notifier sudah cukup?**
-Use case dibutuhkan ketika sebuah fitur memiliki aturan bisnis (*business rules*) yang spesifik, membutuhkan proses validasi, atau perlu menggabungkan operasi dari beberapa repository sekaligus (misal: fitur Checkout). Untuk operasi CRUD sederhana (seperti `getNotes` yang hanya mengembalikan List), memanggil repository langsung dari notifier sudah sangat cukup dan efisien.
+Use case diperlukan saat sebuah fitur memiliki aturan bisnis tertentu, membutuhkan proses verifikasi, atau perlu mengintegrasikan tindakan dari beberapa repositori sekaligus (misalnya: fitur Checkout). Untuk operasi CRUD sederhana (seperti `getNotes` yang hanya mengembalikan List), langsung memanggil repositori dari pemberi notifikasi sudah cukup dan sangat efisien.
 
 **3. Apa biaya over-engineering (use case per CRUD satu-baris) bagi tim kecil? Kapan biayanya sepadan?**
 Biayanya adalah kode menjadi membengkak (*boilerplate* tinggi), navigasi antar file menjadi rumit, dan kecepatan rilis (*development time*) menurun drastis. Bagi tim kecil, hal ini membunuh produktivitas. Biaya ini baru menjadi sepadan untuk aplikasi skala Enterprise dengan ratusan developer, di mana pemisahan batas kerja tiap tim, stabilitas jangka panjang, dan mock testing pada tiap langkah kecil jauh lebih diprioritaskan daripada kecepatan rilis.
