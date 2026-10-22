@@ -32,10 +32,10 @@ Fitur dipecah berdasarkan struktur **Feature-First**:
 
 ---
 
-## 🤖 AI Challenge
+## AI Challenge
 
 **Prompt yang digunakan:**
-> *"Project Flutter saya: campus_notify (auth + FCM + daftar pengumuman). Kondisi kini: folder lib/{data, providers, pages, messaging}, repository tercampur dengan implementasi, widget memanggil Dio langsung. Tugas: Usulkan struktur feature-first Clean Architecture (presentation/domain/data) untuk fitur auth + announcements. Tunjukkan wiring DI dengan Riverpod..."*
+Project Flutter saya: campus_notify (auth + FCM + daftar pengumuman). Kondisi kini: folder lib/{data, providers, pages, messaging}, repository tercampur dengan implementasi, widget memanggil Dio langsung. Tugas: Usulkan struktur feature-first Clean Architecture (presentation/domain/data) untuk fitur auth + announcements. Tunjukkan wiring DI dengan Riverpod.
 
 ### Tabel Verifikasi AI (Usulan vs Keputusan Final)
 
