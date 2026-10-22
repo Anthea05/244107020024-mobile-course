@@ -1,18 +1,4 @@
-# 07 - Clean Architecture (Feature-First)
-
-## 📌 Deskripsi dan Tujuan
-Project ini merupakan hasil *refactoring* dari project sebelumnya menuju penerapan **Clean Architecture berbasis Feature-First**. Tujuannya adalah memisahkan kode menjadi tiga layer utama (`Domain`, `Data`, `Presentation`) agar aplikasi lebih mudah diuji (testable), dikelola (maintainable), dan *logic* utamanya tidak bergantung erat pada *library* eksternal.
-
-### Diagram Layer & Arah Dependensi
-Dependensi aturan (Dependency Rule) hanya mengarah ke dalam (menuju layer Domain).
-```text
-[ Presentation ] (UI, Provider) 
-       │
-       ▼ bergantung ke
-[ Domain ] (Entity, Repository Interface, Use Case, Failure)  ◄── Pusat Logika (Murni Dart)
-       ▲ diimplementasikan oleh
-       │
-[ Data ] (Model, Repository Impl, API/DB Client)
+# 🚀 Laporan Refactoring Clean Architecture Flutter
 
 ## 🛠️ Praktikum 1: Audit Layer Project Lama
 
